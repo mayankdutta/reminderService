@@ -4,12 +4,16 @@ const { PORT } = require("./config/serverConfig");
 const TicketController = require("./controllers/ticket-controller");
 
 const setupJobs = require("./utils/job");
+const { createChannel } = require("./utils/messageQueue");
 
 const app = express();
 
 async function listenAndStartServer() {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
+
+
+  const channel = await createChannel()
 
 
   app.listen(PORT, () => {
