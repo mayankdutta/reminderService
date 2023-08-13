@@ -21,15 +21,17 @@ const createChannel = async () => {
 const subscribeMessage = async (channel, service, binding_key) => {
   try {
     const applicationQueue = await channel.assertQueue(QUEUE_NAME);
-
     channel.bindQueue(applicationQueue.queue, EXCHANGE_NAME, binding_key);
 
     channel.consume(applicationQueue.queue, (msg) => {
-      console.log("message received");
-      console.log(msg.content.toString());
+      // service(msg.content.toString());
+      const payload = JSON.parse(msg.content.toString());
+      console.log("message received ");
+
+      service(payload);
+      // service.testingQueue(payload);
       channel.ack(msg);
     });
-
   } catch (error) {
     console.log(error);
     console.warn(error.message);

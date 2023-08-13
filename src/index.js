@@ -7,13 +7,18 @@ const setupJobs = require("./utils/job");
 const { createChannel, subscribeMessage } = require("./utils/messageQueue");
 
 const app = express();
+const EmailService = require("./services/email-service");
 
 async function listenAndStartServer() {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
   const channel = await createChannel();
-  subscribeMessage(channel, undefined, REMINDER_BINDING_KEY)
+  subscribeMessage(
+    channel,
+    EmailService.subscribedEvents,
+    REMINDER_BINDING_KEY
+  );
 
   app.listen(PORT, () => {
     console.log(`Server is listening @${PORT}`);
